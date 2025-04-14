@@ -1,6 +1,6 @@
 package entities;
 public class Animal {
-	public void fazerSoma() {
+	public void fazerSom() {
 		System.out.println("Som genérico");
 	}
 }
