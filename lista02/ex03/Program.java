@@ -10,8 +10,8 @@ public class Program {
 		Animal a2 = new Cachorro();
 		Animal a3 = new Gato();
 		
-		a1.fazerSoma();
-		a2.fazerSoma();
-		a3.fazerSoma();
+		a1.fazerSom();
+		a2.fazerSom();
+		a3.fazerSom();
 	}
 }
