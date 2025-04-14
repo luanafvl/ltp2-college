@@ -8,7 +8,7 @@ public class Program {
 	public static void main(String[] args) {
   	 	
 		try {
-      // Colocar o endereço do arquivo
+			// Colocar o endereço do arquivo
 			lerArquivo("endereço");
 		}
 		catch (FileNotFoundException e) {
