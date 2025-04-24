@@ -39,7 +39,7 @@ public class ClienteDaoJDBC implements ClienteDao {
                 System.out.print("É brasileiro ou estrangeiro? (b/e): ");
                 String nacionalidade = sc.nextLine().toLowerCase();
                 
-                TipoCliente tipo = null;
+                Integer tipo = 0;
                 String cpf = null;
                 String passaporte = null;
                 
@@ -47,12 +47,12 @@ public class ClienteDaoJDBC implements ClienteDao {
                 if (nacionalidade.equals("b")) {
                 	System.out.print("Informe seu CPF: ");
                 	cpf = sc.nextLine();
-                	tipo = TipoCliente.NACIONAL;
+                	tipo = TipoCliente.NACIONAL.ordinal();
                 	
                 } else if (nacionalidade.equals("e")) {
                 	System.out.print("Informe seu passaporte: ");
                 	passaporte = sc.nextLine();
-                	tipo = TipoCliente.ESTRANGEIRO;
+                	tipo = TipoCliente.ESTRANGEIRO.ordinal();
                 }
 				
 				st = conn.prepareStatement("INSERT INTO tb_cliente "
@@ -65,7 +65,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 				st.setString(3, email);
 				st.setString(4, cpf);
 				st.setString(5, passaporte);
-				st.setInt(6, tipo.ordinal());
+				st.setInt(6, tipo+1);
 				
 				st.executeUpdate();
 				
