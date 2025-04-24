@@ -1,24 +1,22 @@
 package application;
 
 import java.sql.Connection;
-import java.util.List;
+
 import java.util.Scanner;
 
 import db.DB;
-import enums.TipoCliente;
+
 import model.dao.ServicoDao;
 import model.dao.impl.ClienteDaoJDBC;
 import model.dao.impl.ClientePacoteServicoDaoJDBC;
 import model.dao.impl.PacoteViagemDaoJDBC;
 import model.dao.impl.ServicoDaoJDBC;
-import model.entities.Cliente;
-import model.entities.PacoteViagem;
-import model.entities.Servico;
 
 public class Program {
 
 	public static void main(String[] args) {
-	    Scanner sc = new Scanner(System.in);
+	    
+		Scanner sc = new Scanner(System.in);
 	    Connection conn = DB.getConnection();
 
 	    Program programa = new Program();
@@ -45,40 +43,19 @@ public class Program {
 	            case 3 -> programa.gerenciarServicos();
 
 	            case 4 -> {
-	                System.out.print("Nome do cliente: ");
-	                sc.next();
-	                String nomeCliente = sc.nextLine();
-	                System.out.print("Nome do pacote: ");
-	                String nomePacote = sc.nextLine();
-	                clientePacoteServicoDAO.adicionarPacoteParaCliente(nomeCliente, nomePacote);
-	                System.out.println("Compra registrada!");
+	                clientePacoteServicoDAO.adicionarPacoteParaCliente();
 	            }
 
 	            case 5 -> {
-	                System.out.print("Nome do cliente: ");
-	                String nomeCliente = sc.nextLine();
-	                List<PacoteViagem> pacotes = clientePacoteServicoDAO.listarPacotesDoCliente(nomeCliente);
-	                pacotes.forEach(System.out::println);
+	            	clientePacoteServicoDAO.listarPacotesDoCliente();
 	            }
 
 	            case 6 -> {
-	                System.out.print("Nome do cliente: ");
-	                String nomeCliente = sc.nextLine();
-	                System.out.print("Nome do pacote: ");
-	                String nomePacote = sc.nextLine();
-	                System.out.print("Nome do serviço: ");
-	                String nomeServico = sc.nextLine();
-	                clientePacoteServicoDAO.adicionarServicoAoPacoteCliente(nomeCliente, nomePacote, nomeServico);
-	                System.out.println("Serviço adicionado ao pacote!");
+	            	clientePacoteServicoDAO.adicionarServicoAoPacoteCliente(clientePacoteServicoDAO.listarPacotesDoCliente());
 	            }
 
 	            case 7 -> {
-	                System.out.print("Nome do cliente: ");
-	                String nomeCliente = sc.nextLine();
-	                System.out.print("Nome do pacote: ");
-	                String nomePacote = sc.nextLine();
-	                List<Servico> servicos = clientePacoteServicoDAO.listarServicosDoClienteNoPacote(nomeCliente, nomePacote);
-	                servicos.forEach(System.out::println);
+	                clientePacoteServicoDAO.listarServicosDoClienteNoPacote();
 	            }
 
 	            case 0 -> System.out.println("Saindo...");
@@ -112,83 +89,23 @@ public class Program {
             
             switch(opt2) {
                 case 1 -> {
-                	System.out.print("Nome: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Telefone: ");
-                    String telefone = sc.nextLine();
-                    System.out.print("Email: ");
-                    String email = sc.nextLine();
-                    System.out.print("É brasileiro ou estrangeiro? (b/e): ");
-                    String nacionalidade = sc.nextLine();
-                    
-                    nacionalidade = nacionalidade.toLowerCase();
-                    
-                    if (nacionalidade.equals("b")) {
-                    	
-                    	System.out.print("Informe seu CPF: ");
-                    	String cpf = sc.nextLine();
-                    	Cliente c = new Cliente(nome, telefone, email, TipoCliente.NACIONAL, cpf, null);
-                    	clienteDAO.insert(c);
-                    } else if (nacionalidade.equals("e")) {
-                    	
-                    	System.out.print("Informe seu passaporte: ");
-                    	String passaporte = sc.nextLine();
-                    	Cliente c = new Cliente(nome, telefone, email, TipoCliente.NACIONAL, null, passaporte);
-                    	clienteDAO.insert(c);
-                    }
+                	clienteDAO.insert();
                 }
                     
                 case 2 -> {
-                	
-                	System.out.print("Informe o número do documento para a atualização do cliente: ");
-                	String documento = sc.nextLine();
-                	
-                	System.out.print("Nome: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Telefone: ");
-                    String telefone = sc.nextLine();
-                    System.out.print("Email: ");
-                    String email = sc.nextLine();
-                    System.out.print("É brasileiro ou estrangeiro? (b/e): ");
-                    String nacionalidade = sc.nextLine();
-                    
-                    nacionalidade = nacionalidade.toLowerCase();
-                    
-                    if (nacionalidade.equals("b")) {
-                    	
-                    	System.out.print("Informe seu CPF: ");
-                    	String cpf = sc.nextLine();
-                    	Cliente c = new Cliente(nome, telefone, email, TipoCliente.NACIONAL, cpf, null);
-                    	clienteDAO.update(documento, c);
-                    } else if (nacionalidade.equals("e")) {
-                    	
-                    	System.out.print("Informe seu passaporte: ");
-                    	String passaporte = sc.nextLine();
-                    	Cliente c = new Cliente(nome, telefone, email, TipoCliente.NACIONAL, null, passaporte);
-                    	clienteDAO.update(documento, c);
-                    }
+                	clienteDAO.update();
                 }
                 
                 case 3 -> {
-                	System.out.print("Informe o número do documento: ");
-                	String documento = sc.nextLine();
-                	
-                	clienteDAO.deleteByDocument(documento);
+                	clienteDAO.deleteById();
                 }
                 
                 case 4 -> {
-                	System.out.print("Informe o número do documento: ");
-                	String documento = sc.nextLine();
-                	
-                	Cliente cli = clienteDAO.findByDocument(documento);
-                	System.out.println(cli);
+                	clienteDAO.findById();
                 }
                 
                 case 5 -> {
-                	List<Cliente> clientes = clienteDAO.findAll();
-                    for(Cliente c : clientes) {
-                    	System.out.println(c);
-                    }
+                	clienteDAO.findAll();
                 }
                 case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");
@@ -218,63 +135,22 @@ public class Program {
             
             switch(opt2) {
             	case 1 -> {
-            		System.out.print("Nome do pacote: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Descrição: ");
-                    String descricao = sc.nextLine();
-                    System.out.print("Preço: ");
-                    double preco = sc.nextDouble();
-                    System.out.print("Duração (dias): ");
-                    int duracao = sc.nextInt();
-                    System.out.print("Destino: ");
-                    int destino = sc.nextInt();
-                    System.out.print("Tipo de pacote: ");
-                    int tipo = sc.nextInt();
-                    sc.nextLine();
-                    PacoteViagem p = new PacoteViagem(nome, preco, descricao, duracao, destino, tipo);
-                    pacoteDAO.insert(p);
+            		pacoteDAO.insert();
             	}
             	case 2 -> {
-            		
-            		System.out.println("Informe o nome do pacote a ser atualizado: ");
-            		String nomePacote = sc.nextLine();
-            		
-            		System.out.print("Nome do pacote: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Descrição: ");
-                    String descricao = sc.nextLine();
-                    System.out.print("Preço: ");
-                    double preco = sc.nextDouble();
-                    System.out.print("Duração (dias): ");
-                    int duracao = sc.nextInt();
-                    System.out.print("Destino: ");
-                    int destino = sc.nextInt();
-                    System.out.print("Tipo de pacote: ");
-                    int tipo = sc.nextInt();
-                    sc.nextLine();
-                    PacoteViagem p = new PacoteViagem(nome, preco, descricao, duracao, destino, tipo);
-                    pacoteDAO.update(nomePacote, p);
+            		pacoteDAO.update();
             	}
             	
             	case 3 -> {
-            		System.out.print("Nome do pacote: ");
-                    String nomePacote = sc.nextLine();
-                    
-                    pacoteDAO.deleteByName(nomePacote);
+                    pacoteDAO.deleteById();
             	}
             	
             	case 4 -> {
-            		System.out.print("Nome do pacote: ");
-                    String nomePacote = sc.nextLine();
-                    
-                    pacoteDAO.findByName(nomePacote);
+                    pacoteDAO.findById();
             	}
             	
             	case 5 -> {
-            		List<PacoteViagem> pacotes = pacoteDAO.findAll();
-                    for(PacoteViagem pv : pacotes) {
-                    	System.out.println(pv);
-                    }
+            		pacoteDAO.findAll();
             	}
             	case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");
@@ -303,54 +179,23 @@ public class Program {
             
             switch(opt2) {
             	case 1 -> {
-            		System.out.print("Nome do serviço: ");
-            		sc.nextLine();
-                    String nome = sc.nextLine();
-                    System.out.print("Preço: ");
-                    double preco = sc.nextDouble();
-                    sc.nextLine();
-                    System.out.print("Descrição: ");
-                    String descricao = sc.nextLine();                   
-                    Servico s = new Servico (nome, preco, descricao);
-                    servicoDAO.insert(s);
+            		servicoDAO.insert();
             	}
             	
             	case 2 -> {
-            		
-            		System.out.println("Informe o nome do serviço a ser atualizado: ");
-            		String nomeServico = sc.nextLine();
-            		
-            		System.out.print("Nome do serviço: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Preço: ");
-                    double preco = sc.nextDouble();
-                    sc.nextLine();
-                    System.out.print("Descrição: ");
-                    String descricao = sc.nextLine();
-                    sc.next();
-                    Servico s = new Servico (nome, preco, descricao);
-                    servicoDAO.update(nomeServico, s);
+            		servicoDAO.update();
             	}
             	
             	case 3 -> {
-            		System.out.println("Informe o nome do serviço: ");
-            		String nomeServico = sc.nextLine();
-            		
-            		servicoDAO.deleteByName(nomeServico);
+            		servicoDAO.deleteById();
             	}
             	
             	case 4 -> {
-            		System.out.println("Informe o nome do serviço: ");
-            		String nomeServico = sc.nextLine();
-            		
-            		servicoDAO.findByName(nomeServico);
+            		servicoDAO.findById();
             	}
             	
             	case 5 -> {
-            		List<Servico> servicos = servicoDAO.findAll();
-                    for(Servico s: servicos) {
-                    	System.out.println(s);
-                    }
+            		servicoDAO.findAll();
             	}
             	case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");

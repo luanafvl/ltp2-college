@@ -119,33 +119,4 @@ public class Cliente implements Serializable {
 		return "[id=" + id + ", nome=" + nome + ", telefone=" + telefone + ", email=" + email + ", tipo="
 				+ tipo + ", documento= " + documento + "]";
 	}
-	
-	
-	
-	/*
-	public List<Cliente> getClientes() {
-		return clientes;
-	}
-	
-	public void listarClientes() {
-		for (Cliente c : clientes) {
-			System.out.println(c);
-		}
-	}
-	
-	public String buscarCliente(String buscarNome) {
-		for (Cliente c : clientes) {
-			if(c.nome.equals(buscarNome)) {
-				return buscarNome;
-			}
-		}
-		return "Cliente não encontrado.";
-	}
-	
-	public void removerCliente(String removerNome) {
-		for (Cliente c : clientes)
-			if(c.nome.equals(removerNome))
-				clientes.remove(clientes.indexOf(c));		
-	*/
-
 }

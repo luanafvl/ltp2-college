@@ -1,6 +1,6 @@
 package enums;
 
 public enum TipoCliente {
-	NACIONAL,
-	ESTRANGEIRO
+	NACIONAL, // ordinal = 0
+	ESTRANGEIRO // ordinal = 1
 }

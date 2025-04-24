@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.Scanner;
 
 import enums.TipoCliente;
 import model.dao.ClienteDao;
@@ -13,6 +13,8 @@ import model.entities.Cliente;
 
 public class ClienteDaoJDBC implements ClienteDao {
 
+	Scanner sc = new Scanner(System.in);
+	
 	private Connection conn;
 	
 	public ClienteDaoJDBC (Connection conn) {
@@ -21,34 +23,55 @@ public class ClienteDaoJDBC implements ClienteDao {
 	}
 	
 	@Override
-	public void insert(Cliente cliente) {
+	public void insert() {
 		
 		PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
 				
+				System.out.print("Nome: ");
+                String nome = sc.nextLine();
+                System.out.print("Telefone: ");
+                String telefone = sc.nextLine();
+                System.out.print("Email: ");
+                String email = sc.nextLine();
+                System.out.print("É brasileiro ou estrangeiro? (b/e): ");
+                String nacionalidade = sc.nextLine().toLowerCase();
+                
+                TipoCliente tipo = null;
+                String cpf = null;
+                String passaporte = null;
+                
+                
+                if (nacionalidade.equals("b")) {
+                	System.out.print("Informe seu CPF: ");
+                	cpf = sc.nextLine();
+                	tipo = TipoCliente.NACIONAL;
+                	
+                } else if (nacionalidade.equals("e")) {
+                	System.out.print("Informe seu passaporte: ");
+                	passaporte = sc.nextLine();
+                	tipo = TipoCliente.ESTRANGEIRO;
+                }
+				
 				st = conn.prepareStatement("INSERT INTO tb_cliente "
 						+ "(nome, telefone, email, cpf, passaporte, id_tipo_cliente) "
 						+ "VALUES (?, ?, ?, ?, ?, ?);"
 						);
 				
-				st.setString(1, cliente.getNome());
-				st.setString(2, cliente.getTelefone());
-				st.setString(3, cliente.getEmail());
-				st.setString(4, cliente.getCpf());
-				st.setString(5, cliente.getPassaporte());
-				if(cliente.getTipo() == TipoCliente.NACIONAL) {
-					st.setInt(6, 1);
-				} else if (cliente.getTipo() == TipoCliente.ESTRANGEIRO) {
-					st.setInt(6, 2);
-				}
-			
+				st.setString(1, nome);
+				st.setString(2, telefone);
+				st.setString(3, email);
+				st.setString(4, cpf);
+				st.setString(5, passaporte);
+				st.setInt(6, tipo.ordinal());
+				
 				st.executeUpdate();
 				
 				System.out.println("Cliente cadastrado!");
-				
 			}
+			
 			catch (SQLException e) {
 				System.out.println("Erro ao criar cliente: " + e.getMessage());
 			}
@@ -65,30 +88,37 @@ public class ClienteDaoJDBC implements ClienteDao {
 
 	
 	@Override
-	public void update(String documento, Cliente cliente) {
+	public void update() {
 		
-		PreparedStatement st = null;
+    	PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
+				
+				findAll();
+				
+				System.out.print("Informe id do cliente: ");
+		    	Integer id = sc.nextInt();
+		    	
+		    	System.out.println("Entre com os novos dados ");
+		    	
+		    	System.out.print("Nome: ");
+                String nome = sc.nextLine();
+                System.out.print("Telefone: ");
+                String telefone = sc.nextLine();
+                System.out.print("Email: ");
+                String email = sc.nextLine();
+				
 				st = conn.prepareStatement(
 						"UPDATE tb_cliente "
-						+ "SET nome = ?, telefone = ?, email = ?, cpf = ?, passaporte = ?, id_tipo_cliente = ? "
-						+ "WHERE cpf = ? or passaporte = ?"
+						+ "SET nome = ?, telefone = ?, email = ? "
+						+ "WHERE id_cliente = ?"
 						);
 				
-				st.setString(1, cliente.getNome());
-				st.setString(2, cliente.getTelefone());
-				st.setString(3, cliente.getEmail());
-				st.setString(4, cliente.getCpf());
-				st.setString(5, cliente.getPassaporte());
-				if(cliente.getTipo() == TipoCliente.NACIONAL) {
-					st.setInt(6, 1);
-				} else if (cliente.getTipo() == TipoCliente.ESTRANGEIRO) {
-					st.setInt(6, 2);
-				}
-				st.setString(7, documento);
-				st.setString(8, documento);
+				st.setString(1, nome);
+				st.setString(2, telefone);
+				st.setString(3, email);
+				st.setInt(4, id);
 			
 				st.executeUpdate();
 				
@@ -103,7 +133,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 	            	if (st != null) st.close();
 				}
 				catch (SQLException e) {
-					System.out.println(e.getMessage());
+					System.out.println("Erro ao finalizar: " + e.getMessage());
 				}
 		    }
 		}
@@ -111,17 +141,22 @@ public class ClienteDaoJDBC implements ClienteDao {
 	
 
 	@Override
-	public void deleteByDocument(String documento) {
+	public void deleteById() {
 		PreparedStatement st = null;
 		if(conn != null) {
 			try {
+				
+				findAll();
+				
+				System.out.print("Informe o id do cliente: ");
+				Integer id = sc.nextInt();
+				
 				st = conn.prepareStatement(
 						"DELETE FROM tb_cliente "
-						+ "WHERE cpf = ? or passaporte = ?"
+						+ "WHERE id_cliente = ? "
 						);
 				
-				st.setString(1, documento);
-				st.setString(2, documento);
+				st.setInt(1, id);
 				
 				st.executeUpdate();
 
@@ -144,12 +179,16 @@ public class ClienteDaoJDBC implements ClienteDao {
 
 	
 	@Override
-	public Cliente findByDocument(String documento) {
+	public void findById() {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		if(conn != null) {
 			try {
+				
+				System.out.print("Informe o id do cliente: ");
+				Integer id = sc.nextInt();
+				
 				st = conn.prepareStatement(
 						"SELECT "
 						+ "c.id_cliente as id, "
@@ -162,16 +201,16 @@ public class ClienteDaoJDBC implements ClienteDao {
 						+ "FROM tb_cliente c "
 						+ "INNER JOIN tb_tipo_cliente tc "
 						+ "ON c.id_tipo_cliente = tc.id_tipo_cliente "
-						+ "WHERE c.cpf = ? or c.passaporte = ?"
+						+ "WHERE c.id_cliente = ?"
 						);
 				
-				st.setString(1, documento);
-				st.setString(2, documento);
+				st.setInt(1, id);
 
 				rs = st.executeQuery();
 				
+				Cliente cli = new Cliente();
+				
 				if (rs.next()) {	
-					Cliente cli = new Cliente();
 					cli.setId(rs.getInt("id"));
 					cli.setNome(rs.getString("nome"));
 					cli.setTelefone(rs.getString("telefone"));
@@ -179,8 +218,10 @@ public class ClienteDaoJDBC implements ClienteDao {
 					cli.setTipo(TipoCliente.valueOf(rs.getString("tipo")));
 					cli.setCpf(rs.getString("cpf"));
 					cli.setPassaporte(rs.getString("passaporte"));
-					return cli;					
 				}
+				
+				System.out.println(cli);
+				
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao encontrar cliente: " + e.getMessage());
@@ -195,14 +236,11 @@ public class ClienteDaoJDBC implements ClienteDao {
 				}
 		    }
 		}
-		return null;
 	}
 
 	
 	@Override
-	public List<Cliente> findAll() {
-		
-		List<Cliente> clientes = new ArrayList<>();
+	public void findAll() {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -212,38 +250,27 @@ public class ClienteDaoJDBC implements ClienteDao {
 			try {
 				
 				st = conn.prepareStatement(
-						"SELECT c.id_cliente, "
-						+ "c.nome, "
-						+ "c.telefone, "
-						+ "c.email,"
-						+ "c.cpf, "
-						+ "c.passaporte, "
-						+ "tc.tipo_cliente "
-						+ "FROM tb_cliente c "
-						+ "INNER JOIN tb_tipo_cliente tc "
-						+ "ON c.id_tipo_cliente = tc.id_tipo_cliente"
+						"SELECT "
+						+ "c.id_cliente, "
+						+ "c.nome "
+						+ "FROM tb_cliente c"
 						);
 				
 				rs = st.executeQuery();
+				
+				StringBuilder clientesMsg = new StringBuilder("Clientes cadastrados:");
 				
 				while(rs.next()) {
 					Cliente cli = new Cliente();
 		            cli.setId(rs.getInt("id_cliente"));
 		            cli.setNome(rs.getString("nome"));
-		            cli.setTelefone(rs.getString("telefone"));
-		            cli.setEmail(rs.getString("email"));
-		            cli.setCpf(rs.getString("cpf"));
-		            cli.setPassaporte(rs.getString("passaporte"));
-		            String tipo = rs.getString("tipo_cliente");
-		            cli.setTipo(TipoCliente.valueOf(tipo));
-		            
-		            clientes.add(cli);
+		            clientesMsg.append("\n").append(cli.getId()).append(" - ").append(cli.getNome());
 				}
+				System.out.println(clientesMsg);
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao listar clientes: " + e.getMessage());
 			}
 		}
-		return clientes;
 	}
 }

@@ -133,6 +133,4 @@ public class PacoteViagem{
 		return "PacoteViagem [id=" + id + ", nome=" + nome + ", destino=" + destino + ", duracao=" + duracao
 				+ ", preco=" + preco + ", tipo=" + tipo + ", descricao=" + descricao + "]";
 	}
-	
-	
 }
