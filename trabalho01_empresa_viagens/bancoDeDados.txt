@@ -99,7 +99,7 @@ INSERT INTO tb_destino (nome) VALUES
 INSERT INTO tb_tipo_cliente (tipo_cliente)
 VALUES
 ("NACIONAL"),
-("INTERNACIONAL");
+("ESTRANGEIRO");
 
 
 3. tb_tipo_pacote_viagem
