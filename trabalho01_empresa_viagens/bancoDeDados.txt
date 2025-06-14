@@ -76,10 +76,10 @@ CREATE TABLE rel_cliente_pacote_servico (
 
 
 
-populando o banco de dados
+# populando o banco de dados
 
 
-1. tb_destino
+# 1. tb_destino
 
 INSERT INTO tb_destino (nome) VALUES
 ('Paris'),
@@ -94,7 +94,7 @@ INSERT INTO tb_destino (nome) VALUES
 ('Cairo');
 
 
-2. tb_tipo_cliente
+# 2. tb_tipo_cliente
 
 INSERT INTO tb_tipo_cliente (tipo_cliente)
 VALUES
@@ -102,7 +102,7 @@ VALUES
 ("ESTRANGEIRO");
 
 
-3. tb_tipo_pacote_viagem
+# 3. tb_tipo_pacote_viagem
 
 INSERT INTO tb_tipo_pacote_viagem (tipo) VALUES
 ('Aventura'),
