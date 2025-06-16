@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import java.util.Scanner;
 
-import enums.TipoCliente;
 import model.dao.ClienteDao;
 import model.entities.Cliente;
 
@@ -23,133 +22,90 @@ public class ClienteDaoJDBC implements ClienteDao {
 	}
 	
 	@Override
-	public void insert() {
+	public void insert(Cliente cliente) {
 		
 		PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
-				
-				System.out.print("Nome: ");
-                String nome = sc.nextLine();
-                System.out.print("Telefone: ");
-                String telefone = sc.nextLine();
-                System.out.print("Email: ");
-                String email = sc.nextLine();
-                System.out.print("É brasileiro ou estrangeiro? (b/e): ");
-                String nacionalidade = sc.nextLine().toLowerCase();
-                
-                Integer tipo = 0;
-                String cpf = null;
-                String passaporte = null;
-                
-                
-                if (nacionalidade.equals("b")) {
-                	System.out.print("Informe seu CPF: ");
-                	cpf = sc.nextLine();
-                	tipo = TipoCliente.NACIONAL.ordinal();
-                	
-                } else if (nacionalidade.equals("e")) {
-                	System.out.print("Informe seu passaporte: ");
-                	passaporte = sc.nextLine();
-                	tipo = TipoCliente.ESTRANGEIRO.ordinal();
-                }
 				
 				st = conn.prepareStatement("INSERT INTO tb_cliente "
 						+ "(nome, telefone, email, cpf, passaporte, id_tipo_cliente) "
 						+ "VALUES (?, ?, ?, ?, ?, ?);"
 						);
 				
-				st.setString(1, nome);
-				st.setString(2, telefone);
-				st.setString(3, email);
-				st.setString(4, cpf);
-				st.setString(5, passaporte);
-				st.setInt(6, tipo+1);
+				st.setString(1, cliente.getNome());
+				st.setString(2, cliente.getTelefone());
+				st.setString(3, cliente.getEmail());
+				st.setString(4, cliente.getCpf());
+				st.setString(5, cliente.getPassaporte());
+				st.setInt(6, cliente.getTipo()+1);
 				
 				st.executeUpdate();
 				
 				System.out.println("Cliente cadastrado!");
 			}
-			
 			catch (SQLException e) {
 				System.out.println("Erro ao criar cliente: " + e.getMessage());
 			}
 			finally {
 				try {
-	            	if (st != null) st.close();
+					if (st != null) st.close();
 				}
 				catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
-		    }
+		    	}
 		}
 	}
 
 	
 	@Override
-	public void update() {
+	public void update(Integer id, Cliente cliente) {
 		
     	PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
 				
-				findAll();
-				
-				System.out.print("Informe id do cliente: ");
-		    	Integer id = sc.nextInt();
-		    	
-		    	System.out.println("Entre com os novos dados ");
-		    	
-		    	System.out.print("Nome: ");
-                String nome = sc.nextLine();
-                System.out.print("Telefone: ");
-                String telefone = sc.nextLine();
-                System.out.print("Email: ");
-                String email = sc.nextLine();
-				
 				st = conn.prepareStatement(
 						"UPDATE tb_cliente "
-						+ "SET nome = ?, telefone = ?, email = ? "
+						+ "SET nome = ?, telefone = ?, email = ?, tipo = ?, cpf = ?, passaporte = ? "
 						+ "WHERE id_cliente = ?"
 						);
 				
-				st.setString(1, nome);
-				st.setString(2, telefone);
-				st.setString(3, email);
-				st.setInt(4, id);
+				st.setString(1, cliente.getNome());
+				st.setString(2, cliente.getTelefone());
+				st.setString(3, cliente.getEmail());
+				st.setString(4, cliente.getCpf());
+				st.setString(5, cliente.getPassaporte());
+				st.setInt(6, cliente.getTipo()+1);
+
+				// Alterar para cliente.getId()
+				st.setInt(7, id);
 			
 				st.executeUpdate();
-				
-				System.out.println("Cliente atualizado com sucesso");
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao atualizar cliente: " + e.getMessage());
 			}
 			finally {	
 				try {
-					
-	            	if (st != null) st.close();
+					if (st != null) st.close();
 				}
 				catch (SQLException e) {
 					System.out.println("Erro ao finalizar: " + e.getMessage());
 				}
-		    }
+		    	}
 		}
 	}
 	
 
 	@Override
-	public void deleteById() {
+	public void deleteById(Integer id) {
 		PreparedStatement st = null;
 		if(conn != null) {
 			try {
-				
-				findAll();
-				
-				System.out.print("Informe o id do cliente: ");
-				Integer id = sc.nextInt();
 				
 				st = conn.prepareStatement(
 						"DELETE FROM tb_cliente "
@@ -159,9 +115,6 @@ public class ClienteDaoJDBC implements ClienteDao {
 				st.setInt(1, id);
 				
 				st.executeUpdate();
-
-				
-				System.out.println("Cliente removido com sucesso.");
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao remover cliente: " + e.getMessage());
@@ -179,15 +132,14 @@ public class ClienteDaoJDBC implements ClienteDao {
 
 	
 	@Override
-	public void findById() {
+	public Cliente findById(Integer id) {
+
+		Cliente cli = new Cliente();
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		if(conn != null) {
 			try {
-				
-				System.out.print("Informe o id do cliente: ");
-				Integer id = sc.nextInt();
 				
 				st = conn.prepareStatement(
 						"SELECT "
@@ -208,8 +160,6 @@ public class ClienteDaoJDBC implements ClienteDao {
 
 				rs = st.executeQuery();
 				
-				Cliente cli = new Cliente();
-				
 				if (rs.next()) {	
 					cli.setId(rs.getInt("id"));
 					cli.setNome(rs.getString("nome"));
@@ -219,23 +169,22 @@ public class ClienteDaoJDBC implements ClienteDao {
 					cli.setCpf(rs.getString("cpf"));
 					cli.setPassaporte(rs.getString("passaporte"));
 				}
-				
-				System.out.println(cli);
-				
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao encontrar cliente: " + e.getMessage());
+				cli = null;
 			}
 			finally {	
 				try {
 					if (rs != null) rs.close();
-	            	if (st != null) st.close();
+	            			if (st != null) st.close();
 				}
 				catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
-		    }
+		    	}
 		}
+		return cli;
 	}
 
 	
