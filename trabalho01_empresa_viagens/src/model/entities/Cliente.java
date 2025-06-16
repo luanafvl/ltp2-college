@@ -1,27 +1,28 @@
+// Pacote onde a classe Cliente está localizada
 package model.entities;
 
-import java.io.Serializable;
+// Importa a interface Serializable para permitir que objetos dessa class
 
-import java.util.Objects;
-
-import enums.TipoCliente;
-
+// Classe Cliente representa um cliente no sistema e pode ser serializada
 public class Cliente implements Serializable {
-	
+
+	// Número de versão da classe para controle de compatibilidade na serialização
 	private static final long serialVersionUID = 1L;
-	
+
+	// Atributos da entidade Cliente
 	private Integer id;
 	private String nome;
 	private String telefone;
 	private String email;
-	private TipoCliente tipo;
-	private String cpf;
-	private String passaporte;
+	private Integer tipo;           // Inteiro representando o tipo de cliente (ex: 1 = NACIONAL ou 2 = ESTRANGEIRO)
+	private String cpf;             // CPF para clientes nacionais
+	private String passaporte;      // Passaporte para clientes estrangeiros
 	
-	
+	// Construtor vazio
 	public Cliente() {}
-	
-	public Cliente(String nome, String telefone, String email, TipoCliente tipo, String cpf, String passaporte) {
+
+	// Construtor com parâmetros para criar um cliente completo, exceto o ID (auto-incrementado pelo banco)
+	public Cliente(String nome, String telefone, String email, Integer tipo, String cpf, String passaporte) {
 		this.nome = nome;
 		this.telefone = telefone;
 		this.email = email;
@@ -30,15 +31,17 @@ public class Cliente implements Serializable {
 		this.passaporte = passaporte;
 	}
 	
-	
+	// Setter para o ID (utilizado quando o banco retorna o ID gerado)
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
+	// Getter para o ID
 	public Integer getId() {
 		return id;
 	}
 
+	// Getters e setters para os demais atributos
 	public String getNome() {
 		return nome;
 	}
@@ -87,35 +90,20 @@ public class Cliente implements Serializable {
 		this.passaporte = passaporte;
 	}
 
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cliente other = (Cliente) obj;
-		return Objects.equals(id, other.id);
-	}
-
+	// Método sobrescrito toString() para representar o cliente como uma string formatada
 	@Override
 	public String toString() {
 		
 		String documento = null;
-		
+
+		// Define qual documento será exibido: CPF ou passaporte
 		if(passaporte != null) {
 			documento = passaporte;
 		} else if (cpf != null){
 			documento = cpf;
 		}
-		
+
+		// Retorna a representação textual do objeto Cliente
 		return "[id=" + id + ", nome=" + nome + ", telefone=" + telefone + ", email=" + email + ", tipo="
 				+ tipo + ", documento= " + documento + "]";
 	}
