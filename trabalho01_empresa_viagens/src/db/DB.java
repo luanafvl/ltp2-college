@@ -19,7 +19,7 @@ public class DB {
 				conn = DriverManager.getConnection(url, props);
 			}
 			catch (SQLException e) {
-				throw new DbException(e.getMessage());
+				System.out.println(e.getMessage());
 			}
 		}
 			return conn;
@@ -31,20 +31,24 @@ public class DB {
 				conn.close();
 			}
 			catch (SQLException e) {
-				throw new DbException(e.getMessage());
+				System.out.println(e.getMessage());
 			}
 		}
 	}
 	
 	private static Properties loadProperties() {
-		try(FileInputStream fs = new FileInputStream("src/db.properties")) {
-			Properties props = new Properties();
+		
+		Properties props = new Properties();
+		
+		try(FileInputStream fs = new FileInputStream("db.properties")) {
+			
 			props.load(fs);
-			return props;
+			
 		}
 		catch (IOException e) {
-			throw new DbException(e.getMessage());
+			System.out.println(e.getMessage());
 		}
+		return props;
 	}
 
 	class DbException extends RuntimeException {

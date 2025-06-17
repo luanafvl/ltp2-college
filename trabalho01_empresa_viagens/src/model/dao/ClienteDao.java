@@ -7,33 +7,33 @@ import model.entities.Cliente;
 public interface ClienteDao {
 
 	/**
-     	* Insere um novo cliente no banco de dados.
-     	* @param pacote O objeto Cliente a ser inserido.
-     	*/
+    * Insere um novo cliente no banco de dados.
+    * @param obj O objeto Cliente a ser inserido.
+    */
 	void insert(Cliente obj);
 
 	/**
-     	* Atualiza os dados de um cliente existente no banco.
-     	* @param O id do usuário a ser atualizado e o objeto com os dados atualizados.
-     	*/
-	void update(Integer id, Cliente obj);
+    * Atualiza os dados de um cliente existente no banco.
+    * @param obj O objeto com os dados atualizados.
+    */
+	void update(Cliente obj);
 
 	/**
-     	* Remove um cliente do banco com base no ID.
-     	* @param id O ID do pacote que deve ser removido.
-     	*/
+    * Remove um cliente do banco com base no ID.
+    * @param id O ID do cliente que deve ser removido.
+    */
 	void deleteById(Integer id);
 
 	/**
-    	 * Busca um cliente pelo seu ID.
-     	* @param id O ID do pacote que deve ser buscado.
-     	* @return O objeto Cliente correspondente, ou null se não encontrado.
-     	*/
+    * Busca um cliente pelo seu ID.
+    * @param id O ID do cliente que deve ser buscado.
+    * @return O objeto Cliente correspondente, ou null se não encontrado.
+    */
 	Cliente findById(Integer id);
 
 	/**
-    	 * Retorna todos os clientes cadastrados.
-     	* @return Lista de Cliente.
-     	*/
+    * Retorna todos os clientes cadastrados.
+    * @return Lista de Cliente.
+    */
 	void findAll();
 }

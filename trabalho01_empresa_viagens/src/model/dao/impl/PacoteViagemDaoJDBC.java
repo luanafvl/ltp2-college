@@ -20,28 +20,14 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 	}
 	
 	@Override
-	public void insert() {
+	public void insert(PacoteViagem pacoteViagem) {
 		
 		PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
 		
-        		System.out.print("Nome do pacote: ");
-                String nome = sc.nextLine();
-                System.out.print("Descrição: ");
-                String descricao = sc.nextLine();
-                System.out.print("Preço: ");
-                Double preco = sc.nextDouble();
-                System.out.print("Duração (dias): ");
-                Integer duracao = sc.nextInt();
-                findAllDestinos();
-                System.out.print("Destino: ");
-                Integer destino = sc.nextInt();
-                findAllTipos();
-                System.out.print("Tipo de pacote: ");
-                Integer tipo = sc.nextInt();
-                sc.nextLine();
+        		
 				
 				st = conn.prepareStatement(
 						"INSERT INTO tb_pacote_viagem "
@@ -49,12 +35,12 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 						+ "VALUES (?, ?, ?, ?, ?, ?)"
 						);
 				
-				st.setString(1, nome);
-				st.setDouble(2, preco);
-				st.setString(3, descricao);
-				st.setInt(4, duracao);
-				st.setInt(5, destino);
-				st.setInt(6, tipo);
+				st.setString(1, pacoteViagem.getNome());
+				st.setDouble(2, pacoteViagem.getPreco());
+				st.setString(3, pacoteViagem.getDescricao());
+				st.setInt(4, pacoteViagem.getDuracao());
+				st.setInt(5, pacoteViagem.getIdDestino());
+				st.setInt(6, pacoteViagem.getIdTipo());
 				
 				st.executeUpdate();
 				
@@ -76,7 +62,7 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 	}
 
 	@Override
-	public void update() {
+	public void update(PacoteViagem pacoteViagem) {
 		
 		PreparedStatement st = null;
 		
@@ -141,15 +127,10 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 	}
 
 	@Override
-	public void deleteById() {
+	public void deleteById(Integer id) {
 		PreparedStatement st = null;
 		if(conn != null) {
 			try {
-			
-				findAll();
-				
-				System.out.print("Informe o id do pacote: ");
-				Integer id = sc.nextInt();
 				
 				st = conn.prepareStatement(
 						"DELETE FROM tb_pacote_viagem "
@@ -177,14 +158,18 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 	}
 
 	@Override
-	public void findById() {
+	public PacoteViagem findById(Integer id) {
+		
+		PacoteViagem pacoteViagem = new PacoteViagem();
+		
 		PreparedStatement st = null;
 		ResultSet rs = null;
+		
 		if(conn != null) {
 			try {
 			
 				System.out.print("Informe o id do pacote: ");
-				Integer id = sc.nextInt();
+				id = sc.nextInt();
 				
 				st = conn.prepareStatement(
 						"SELECT "
@@ -206,24 +191,23 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 				st.setInt(1, id);
 				rs = st.executeQuery();
 				
-				PacoteViagem pv = new PacoteViagem();
-				
 				if (rs.next()) {
-					pv.setId(rs.getInt("id_pacote_viagem"));
-					pv.setNome(rs.getString("nome"));
-					pv.setPreco(rs.getDouble("preco"));
-					pv.setDescricao(rs.getString("descricao"));
-					pv.setDuracao(rs.getInt("duracao"));
-					pv.setDestino(rs.getString("destino"));
-					pv.setTipo(rs.getString("tipo_pacote_viagem"));
+					pacoteViagem.setId(rs.getInt("id_pacote_viagem"));
+					pacoteViagem.setNome(rs.getString("nome"));
+					pacoteViagem.setPreco(rs.getDouble("preco"));
+					pacoteViagem.setDescricao(rs.getString("descricao"));
+					pacoteViagem.setDuracao(rs.getInt("duracao"));
+					pacoteViagem.setDestino(rs.getString("destino"));
+					pacoteViagem.setTipo(rs.getString("tipo_pacote_viagem"));
 				}
-				
-				System.out.println(pv);
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao listar pacote: " + e.getMessage());
+				pacoteViagem = null;
 			}
 		}
+		
+		return pacoteViagem;
 	}
 
 	@Override

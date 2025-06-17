@@ -4,10 +4,7 @@ package model.entities;
 // Importa a interface Serializable para permitir que objetos dessa class
 
 // Classe Cliente representa um cliente no sistema e pode ser serializada
-public class Cliente implements Serializable {
-
-	// Número de versão da classe para controle de compatibilidade na serialização
-	private static final long serialVersionUID = 1L;
+public class Cliente {
 
 	// Atributos da entidade Cliente
 	private Integer id;
@@ -66,11 +63,11 @@ public class Cliente implements Serializable {
 		this.email = email;
 	}
 	
-	public TipoCliente getTipo() {
+	public Integer getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoCliente tipo) {
+	public void setTipo(Integer tipo) {
 		this.tipo = tipo;
 	}
 	

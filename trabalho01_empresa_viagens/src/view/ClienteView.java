@@ -38,7 +38,10 @@ public class ClienteView {
             // Chama os métodos do DAO de acordo com a opção
             switch(optMenuCliente) {
             	case 0 -> System.out.println("Voltando...");
-                case 1 -> clienteController.insertCliente();
+                case 1 -> {
+                	System.out.println("Informe os dados do cliente: ");
+                	clienteController.insertCliente();
+                }
                 case 2 -> clienteController.updateCliente();
                 case 3 -> clienteController.deleteClienteById();
                 case 4 -> clienteController.findClienteById();
@@ -49,40 +52,48 @@ public class ClienteView {
 	}
 	
 	public Cliente coletaDadosCliente() {
-		System.out.print("Nome: ");
-        String nome = sc.nextLine();
-        System.out.print("Telefone: ");
-        String telefone = sc.nextLine();
-        System.out.print("Email: ");
-        String email = sc.nextLine();
-        System.out.print("É brasileiro ou estrangeiro? (b/e): ");
-        String nacionalidade = sc.nextLine().toLowerCase();
-        
-        Integer tipo = 0;
-        String cpf = null;
-        String passaporte = null;
-        
-        
-        if (nacionalidade.equals("b")) {
-        	System.out.print("Informe seu CPF: ");
-        	cpf = sc.nextLine();
-        	tipo = TipoCliente.NACIONAL.ordinal();
-        	
-        } else if (nacionalidade.equals("e")) {
-        	System.out.print("Informe seu passaporte: ");
-        	passaporte = sc.nextLine();
-        	tipo = TipoCliente.ESTRANGEIRO.ordinal();
-        }
-        
-        Cliente cliente = new Cliente(nome, telefone, email, tipo, cpf, passaporte);
-        
+		
+		Cliente cliente = new Cliente();
+		
+		try {
+			System.out.print("Nome: ");
+			cliente.setNome(sc.nextLine());
+		    System.out.print("Telefone: ");
+		    cliente.setTelefone(sc.nextLine());
+		    System.out.print("Email: ");
+		    cliente.setEmail(sc.nextLine());
+		    System.out.print("É brasileiro ou estrangeiro? (b/e): ");
+		    String nacionalidade = sc.nextLine().toLowerCase();
+		    
+		    if (nacionalidade.equals("b")) {
+		    	System.out.print("Informe seu CPF: ");
+		    	cliente.setCpf(sc.nextLine());
+		    	cliente.setTipo(TipoCliente.NACIONAL.ordinal());
+		    	
+		    } else if (nacionalidade.equals("e")) {
+		    	System.out.print("Informe seu passaporte: ");
+		    	cliente.setPassaporte(sc.nextLine());
+		    	cliente.setTipo(TipoCliente.ESTRANGEIRO.ordinal());
+		    }
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			cliente = null;
+		}
+		
         return cliente;
 	}
 	
 	public Integer coletaIdCliente() {
 		
+		Integer id = 0;
+		
 		System.out.print("Informe id do cliente: ");
-    	Integer id = Integer.parseInt(sc.nextLine());
+		
+		try { 
+			id = Integer.parseInt(sc.nextLine());
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+		}
 		
 		return id;
 	}

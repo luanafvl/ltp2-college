@@ -55,13 +55,13 @@ public class ClienteDaoJDBC implements ClienteDao {
 				catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
-		    	}
+		    }
 		}
 	}
 
 	
 	@Override
-	public void update(Integer id, Cliente cliente) {
+	public void update(Cliente cliente) {
 		
     	PreparedStatement st = null;
 		
@@ -82,7 +82,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 				st.setInt(6, cliente.getTipo()+1);
 
 				// Alterar para cliente.getId()
-				st.setInt(7, id);
+				st.setInt(7, cliente.getId());
 			
 				st.executeUpdate();
 			}
@@ -96,7 +96,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 				catch (SQLException e) {
 					System.out.println("Erro ao finalizar: " + e.getMessage());
 				}
-		    	}
+		    }
 		}
 	}
 	
@@ -157,7 +157,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 						);
 				
 				st.setInt(1, id);
-
+				
 				rs = st.executeQuery();
 				
 				if (rs.next()) {	
@@ -165,7 +165,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 					cli.setNome(rs.getString("nome"));
 					cli.setTelefone(rs.getString("telefone"));
 					cli.setEmail(rs.getString("email"));
-					cli.setTipo(TipoCliente.valueOf(rs.getString("tipo")));
+					cli.setTipo(Integer.valueOf(rs.getString("tipo")));
 					cli.setCpf(rs.getString("cpf"));
 					cli.setPassaporte(rs.getString("passaporte"));
 				}
@@ -213,8 +213,10 @@ public class ClienteDaoJDBC implements ClienteDao {
 					Cliente cli = new Cliente();
 		            cli.setId(rs.getInt("id_cliente"));
 		            cli.setNome(rs.getString("nome"));
+		            
 		            clientesMsg.append("\n").append(cli.getId()).append(" - ").append(cli.getNome());
 				}
+				
 				System.out.println(clientesMsg);
 			}
 			catch (SQLException e) {

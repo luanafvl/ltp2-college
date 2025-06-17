@@ -4,12 +4,8 @@ package view;
 import java.sql.Connection;
 import java.util.Scanner;
 
-import controller.ClienteController;
 import db.DB; // Classe responsável por fornecer a conexão com o banco
-import model.dao.ServicoDao;
 import model.dao.impl.ClientePacoteServicoDaoJDBC;
-import model.dao.impl.PacoteViagemDaoJDBC;
-import model.dao.impl.ServicoDaoJDBC;
 
 /*
  * Classe principal do menu de interações com o usuário
@@ -24,6 +20,8 @@ public class Menu {
 	    Connection conn = DB.getConnection(); // Abre conexão com o banco de dados
 	    
 	    ClienteView clienteView = new ClienteView(sc, conn);
+	    PacoteViagemView pacoteViagemView = new PacoteViagemView(sc, conn);
+	    ServicoView servicoView = new ServicoView(sc, conn);
 	    
 	    // Cria instância do DAO que lida com relacionamento cliente-pacote-serviço
 	    ClientePacoteServicoDaoJDBC clientePacoteServicoDAO = new ClientePacoteServicoDaoJDBC(conn);
@@ -49,8 +47,8 @@ public class Menu {
 	        switch (optMenuPrincipal) {
 	        	case 0 -> System.out.print("Saindo...\n\nPrograma encerrado.");
 	            case 1 -> clienteView.menuCliente();
-	            case 2 -> menuP.gerenciarPacotes(sc, conn); 
-	            case 3 -> menuP.gerenciarServicos(sc, conn);
+	            case 2 -> pacoteViagemView.menuPacoteViagem(); 
+	            case 3 -> servicoView.menuServico();
 	            case 4 -> clientePacoteServicoDAO.adicionarPacoteParaCliente();
 	            case 5 -> clientePacoteServicoDAO.listarPacotesDoCliente();
 	            case 6 -> clientePacoteServicoDAO.adicionarServicoAoPacoteCliente(clientePacoteServicoDAO.listarPacotesDoCliente());
@@ -63,74 +61,4 @@ public class Menu {
 	    DB.closeConnection();
 	    sc.close();
 	}
-	
-	// Menu secundário para gerenciar clientes
-	public void gerenciarClientes(Scanner sc, Connection conn, ClienteController clienteController) {
-
-		ClienteView clienteView = new ClienteView(sc, conn); // View específico para cliente
-		
-		
-	}
-	
-	// Menu para gerenciar pacotes de viagem
-	public void gerenciarPacotes(Scanner sc, Connection conn) {
-
-		PacoteViagemDaoJDBC pacoteDAO = new PacoteViagemDaoJDBC(conn); // DAO de pacotes
-
-		int opt2 = -1;
-    	while (opt2 != 0) {
-    		System.out.println("\n--- GERENCIANDO PACOTES DE VIAGEM ---");
-            System.out.println("|1. Cadastrar pacote       |");
-            System.out.println("|2. Atualizar pacote       |");
-            System.out.println("|3. Remover pacote         |");
-            System.out.println("|4. Buscar pacote          |");
-            System.out.println("|5. Listar pacotes         |");
-            System.out.println("|0. Voltar                 |");
-            System.out.println("----------------------------");
-            System.out.println();
-            System.out.print("Escolha: ");
-            opt2 = Integer.parseInt(sc.nextLine());
-
-            switch(opt2) {
-            	case 0 -> System.out.println("Voltando...");
-            	case 1 -> pacoteDAO.insert();
-            	case 2 -> pacoteDAO.update();
-            	case 3 -> pacoteDAO.deleteById();
-            	case 4 -> pacoteDAO.findById();
-            	case 5 -> pacoteDAO.findAll();
-                default -> System.out.println("Opção inválida.");
-            }
-    	}
-	}
-	
-	// Menu para gerenciar os serviços oferecidos
-	public void gerenciarServicos(Scanner sc, Connection conn) {
-
-        ServicoDao servicoDAO = new ServicoDaoJDBC(conn); // DAO para serviço
-        
-    	int opt2 = -1;
-    	while (opt2 != 0) {
-    		System.out.println("\n--- GERENCIANDO SERVIÇOS ---");
-            System.out.println("|1. Cadastrar serviço      |");
-            System.out.println("|2. Atualizar serviço      |");
-            System.out.println("|3. Remover serviço        |");
-            System.out.println("|4. Buscar serviço         |");
-            System.out.println("|5. Listar serviços        |");
-            System.out.println("|0. Voltar                 |");
-            System.out.println("----------------------------");
-            System.out.println();
-            System.out.print("Escolha: ");
-            opt2 = Integer.parseInt(sc.nextLine());
-
-            switch(opt2) {
-            	case 0 -> System.out.println("Voltando...");
-            	case 1 -> servicoDAO.insert();
-            	case 2 -> servicoDAO.update();
-            	case 3 -> servicoDAO.deleteById();
-            	case 4 -> servicoDAO.findById();
-            	case 5 -> servicoDAO.findAll();
-                default -> System.out.println("Opção inválida.");
-            }
-    	}
-    }
 }

@@ -21,35 +21,25 @@ public class ServicoDaoJDBC implements ServicoDao {
 	}
 	
 	@Override
-	public void insert() {
+	public void insert(Servico servico) {
 		
 		PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
-				
-				System.out.print("Nome do serviço: ");
-                String nome = sc.nextLine();
-                System.out.print("Preço: ");
-                Double preco = sc.nextDouble();
-                sc.nextLine();
-                System.out.print("Descrição: ");
-                String descricao = sc.nextLine(); 
-				
 				st = conn.prepareStatement(
 						"INSERT INTO tb_servico "
 						+ "(servico, preco, descricao) "
 						+ "VALUES (?, ?, ?)"
 						);
 				
-				st.setString(1, nome);
-				st.setDouble(2, preco);
-				st.setString(3, descricao);
+				st.setString(1, servico.getNome());
+				st.setDouble(2, servico.getPreco());
+				st.setString(3, servico.getDescricao());
 				
 				st.executeUpdate();
 				
 				System.out.println("Serviço adicionado com sucesso.");
-				
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao adicionar serviço: " + e.getMessage());
@@ -67,27 +57,12 @@ public class ServicoDaoJDBC implements ServicoDao {
 	
 	
 	@Override
-	public void update() {
+	public void update(Servico servico) {
 		
 		PreparedStatement st = null;
 		
 		if (conn != null) {
 			try {
-				
-				findAll();
-				
-				System.out.print("Informe o id do serviço: ");
-				Integer id = sc.nextInt();
-				
-				System.out.println("Entre com os novos dados");
-				System.out.print("Nome do serviço: ");
-                String nome = sc.nextLine();
-                System.out.print("Preço: ");
-                Double preco = sc.nextDouble();
-                sc.nextLine();
-                System.out.print("Descrição: ");
-                String descricao = sc.nextLine();
-                sc.next();
 				
 				st = conn.prepareStatement(
 						"UPDATE tb_servico "
@@ -95,10 +70,10 @@ public class ServicoDaoJDBC implements ServicoDao {
 						+ "WHERE id_servico = ?"
 						);
 				
-				st.setString(1, nome);
-				st.setDouble(2, preco);
-				st.setString(3, descricao);
-				st.setInt(4, id);
+				st.setString(1, servico.getNome());
+				st.setDouble(2, servico.getPreco());
+				st.setString(3, servico.getDescricao());
+				st.setInt(4, servico.getId());
 				
 				st.executeUpdate();
 				
@@ -120,15 +95,10 @@ public class ServicoDaoJDBC implements ServicoDao {
 	
 	
 	@Override
-	public void deleteById() {
+	public void deleteById(Integer id) {
 		PreparedStatement st = null;
 		if(conn != null) {
 			try {
-				
-				findAll();
-				
-				System.out.print("Informe o id do serviço: ");
-				Integer id = sc.nextInt();
 				
 				st = conn.prepareStatement(
 						"DELETE FROM tb_servico "
@@ -157,15 +127,15 @@ public class ServicoDaoJDBC implements ServicoDao {
 	
 	
 	@Override
-	public void findById() {
+	public Servico findById(Integer id) {
+		
+		Servico servico = new Servico();
+		
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		if(conn != null) {
 			try {
-				
-				System.out.print("Informe o id do serviço: ");
-				Integer id = sc.nextInt();
-				
+		
 				st = conn.prepareStatement(
 						"SELECT "
 						+ "id_servico, "
@@ -177,23 +147,22 @@ public class ServicoDaoJDBC implements ServicoDao {
 						);
 
 				st.setInt(1, id);
+				
 				rs = st.executeQuery();
 				
-				Servico s = new Servico();
-				
 				if (rs.next()) {
-					s.setId(rs.getInt("id_servico"));
-					s.setNome(rs.getString("servico"));
-					s.setPreco(rs.getDouble("preco"));
-					s.setDescricao(rs.getString("descricao"));
+					servico.setId(rs.getInt("id_servico"));
+					servico.setNome(rs.getString("servico"));
+					servico.setPreco(rs.getDouble("preco"));
+					servico.setDescricao(rs.getString("descricao"));
 				}
-				
-				System.out.println(s);
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao listar serviço: " + e.getMessage());
+				servico = null;
 			}
 		}
+		return servico;
 	}
 	
 	
@@ -219,11 +188,11 @@ public class ServicoDaoJDBC implements ServicoDao {
 				StringBuilder servicoMsg = new StringBuilder("Serviços cadastrados: ");
 				
 				while(rs.next()) {
-					Servico s = new Servico();
-					s.setId(rs.getInt("id_servico"));
-		            s.setNome(rs.getString("servico"));
+					Servico servico = new Servico();
+					servico.setId(rs.getInt("id_servico"));
+		            servico.setNome(rs.getString("servico"));
 		            
-		            servicoMsg.append("\n").append(s.getId()).append(" - ").append(s.getNome());
+		            servicoMsg.append("\n").append(servico.getId()).append(" - ").append(servico.getNome());
 				}
 				
 				System.out.println(servicoMsg);

@@ -23,32 +23,38 @@ public class ClienteController {
 	}
 	
 	public void insertCliente() {
-		System.out.println("Informe os dados do cliente: ");
 		cliente = clienteView.coletaDadosCliente();
-		clienteDao.insert(cliente);
-		System.out.println("Cliente cadastrado!");
+		if (cliente != null) clienteDao.insert(cliente);
 	}
 	
 	public void updateCliente() {
 		clienteDao.findAll();
 		id = clienteView.coletaIdCliente();
+		if (id != 0) {
 		System.out.println("Entre com os novos dados do cliente: ");
 		cliente = clienteView.coletaDadosCliente();
-		clienteDao.update(id, cliente);
-		System.out.println("Cliente atualizado com sucesso");
+			if (cliente != null) {
+				clienteDao.update(cliente);
+				System.out.println("Operação concluída com sucesso");
+			}
+		}
 	}
 	
 	public void deleteClienteById() {
 		clienteDao.findAll();
 		id = clienteView.coletaIdCliente();
-		clienteDao.deleteById(id);
-		System.out.println("Cliente removido com sucesso.");
+		if (id != 0) {
+			clienteDao.deleteById(id);
+			System.out.println("Operação concluída com sucesso.");
+		}
 	}
 	
 	public void findClienteById() {
 		id = clienteView.coletaIdCliente();
-		cliente = clienteDao.findById(id);
-		System.out.println(cliente);
+		if (id != 0) {
+			cliente = clienteDao.findById(id);
+			System.out.println(cliente);
+		}
 	}
 	
 	public void findAllClientes() {
