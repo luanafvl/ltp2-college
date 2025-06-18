@@ -4,6 +4,9 @@ package view;
 import java.sql.Connection;
 import java.util.Scanner;
 
+import controller.ClienteController;
+import controller.PacoteViagemController;
+import controller.ServicoController;
 import db.DB; // Classe responsável por fornecer a conexão com o banco
 import model.dao.impl.ClientePacoteServicoDaoJDBC;
 
@@ -19,9 +22,14 @@ public class Menu {
 		Scanner sc = new Scanner(System.in); // Leitor de entrada
 	    Connection conn = DB.getConnection(); // Abre conexão com o banco de dados
 	    
-	    ClienteView clienteView = new ClienteView(sc, conn);
-	    PacoteViagemView pacoteViagemView = new PacoteViagemView(sc, conn);
-	    ServicoView servicoView = new ServicoView(sc, conn);
+	    ClienteView clienteView = new ClienteView(sc);
+	    PacoteViagemView pacoteViagemView = new PacoteViagemView(sc);
+	    ServicoView servicoView = new ServicoView(sc);
+	    
+	    ClienteController clienteController = new ClienteController(sc, conn, clienteView);
+	    PacoteViagemController pacoteViagemController = new PacoteViagemController(sc, conn, pacoteViagemView);
+	    ServicoController servicoController = new ServicoController(sc, conn, servicoView);
+	    
 	    
 	    // Cria instância do DAO que lida com relacionamento cliente-pacote-serviço
 	    ClientePacoteServicoDaoJDBC clientePacoteServicoDAO = new ClientePacoteServicoDaoJDBC(conn);
@@ -46,9 +54,9 @@ public class Menu {
 	        // Executa a ação conforme a escolha
 	        switch (optMenuPrincipal) {
 	        	case 0 -> System.out.print("Saindo...\n\nPrograma encerrado.");
-	            case 1 -> clienteView.menuCliente();
-	            case 2 -> pacoteViagemView.menuPacoteViagem(); 
-	            case 3 -> servicoView.menuServico();
+	            case 1 -> clienteView.menuCliente(clienteController);
+	            case 2 -> pacoteViagemView.menuPacoteViagem(pacoteViagemController); 
+	            case 3 -> servicoView.menuServico(servicoController);
 	            case 4 -> clientePacoteServicoDAO.adicionarPacoteParaCliente();
 	            case 5 -> clientePacoteServicoDAO.listarPacotesDoCliente();
 	            case 6 -> clientePacoteServicoDAO.adicionarServicoAoPacoteCliente(clientePacoteServicoDAO.listarPacotesDoCliente());

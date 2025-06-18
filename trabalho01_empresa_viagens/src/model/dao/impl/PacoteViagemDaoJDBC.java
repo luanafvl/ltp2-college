@@ -160,7 +160,7 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 	@Override
 	public PacoteViagem findById(Integer id) {
 		
-		PacoteViagem pacoteViagem = new PacoteViagem();
+		PacoteViagem pacoteViagem = null;
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -191,6 +191,8 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 				st.setInt(1, id);
 				rs = st.executeQuery();
 				
+				pacoteViagem = new PacoteViagem();
+				
 				if (rs.next()) {
 					pacoteViagem.setId(rs.getInt("id_pacote_viagem"));
 					pacoteViagem.setNome(rs.getString("nome"));
@@ -199,11 +201,13 @@ public class PacoteViagemDaoJDBC implements PacoteViagemDao {
 					pacoteViagem.setDuracao(rs.getInt("duracao"));
 					pacoteViagem.setDestino(rs.getString("destino"));
 					pacoteViagem.setTipo(rs.getString("tipo_pacote_viagem"));
+				} else {
+					return null;
 				}
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao listar pacote: " + e.getMessage());
-				pacoteViagem = null;
+				return null;
 			}
 		}
 		

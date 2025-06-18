@@ -40,7 +40,7 @@ public class DB {
 		
 		Properties props = new Properties();
 		
-		try(FileInputStream fs = new FileInputStream("db.properties")) {
+		try(FileInputStream fs = new FileInputStream("./db.properties")) {
 			
 			props.load(fs);
 			

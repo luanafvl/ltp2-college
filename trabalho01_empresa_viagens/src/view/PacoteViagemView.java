@@ -1,6 +1,5 @@
 package view;
 
-import java.sql.Connection;
 import java.util.Scanner;
 
 import controller.PacoteViagemController;
@@ -9,16 +8,12 @@ import model.entities.PacoteViagem;
 public class PacoteViagemView {
 
 	Scanner sc;
-	Connection conn;
 	
-	PacoteViagemController pacoteViagemController = new PacoteViagemController(sc, conn);
-	
-	public PacoteViagemView(Scanner sc, Connection conn) {
+	public PacoteViagemView(Scanner sc) {
 		this.sc = sc;
-		this.conn = conn;
 	}
 	
-	public void menuPacoteViagem() {
+	public void menuPacoteViagem(PacoteViagemController pacoteViagemController) {
 
 		int optMenuPacoteViagem = -1;
     	while (optMenuPacoteViagem != 0) {
@@ -46,7 +41,7 @@ public class PacoteViagemView {
     	}
 	}
 	
-	public PacoteViagem coletaDadosPacoteViagem() {
+	public PacoteViagem coletaDadosPacoteViagem(PacoteViagemController pacoteViagemController) {
 		
 		PacoteViagem pacoteViagem = new PacoteViagem();
 		

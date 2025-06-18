@@ -1,25 +1,19 @@
 package view;
 
-import java.sql.Connection;
 import java.util.Scanner;
 
 import controller.ClienteController;
-import enums.TipoCliente;
 import model.entities.Cliente;
 
 public class ClienteView {
 	
-	Scanner sc;
-	Connection conn;
+	private Scanner sc;
 	
-	ClienteController clienteController = new ClienteController(sc, conn);
-	
-	public ClienteView (Scanner sc, Connection conn) {
+	public ClienteView (Scanner sc) {
 		this.sc = sc;
-		this.conn = conn;
 	}
 	
-	public void menuCliente() {
+	public void menuCliente(ClienteController clienteController) {
 		
 		int optMenuCliente = -1;
     	while (optMenuCliente != 0) {
@@ -68,12 +62,12 @@ public class ClienteView {
 		    if (nacionalidade.equals("b")) {
 		    	System.out.print("Informe seu CPF: ");
 		    	cliente.setCpf(sc.nextLine());
-		    	cliente.setTipo(TipoCliente.NACIONAL.ordinal());
+		    	cliente.setIdTipo(1);
 		    	
 		    } else if (nacionalidade.equals("e")) {
 		    	System.out.print("Informe seu passaporte: ");
 		    	cliente.setPassaporte(sc.nextLine());
-		    	cliente.setTipo(TipoCliente.ESTRANGEIRO.ordinal());
+		    	cliente.setIdTipo(2);
 		    }
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());

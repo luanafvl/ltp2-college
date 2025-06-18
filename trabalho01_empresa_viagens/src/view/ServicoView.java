@@ -1,6 +1,5 @@
 package view;
 
-import java.sql.Connection;
 import java.util.Scanner;
 
 import controller.ServicoController;
@@ -9,16 +8,12 @@ import model.entities.Servico;
 public class ServicoView {
 
 	Scanner sc;
-	Connection conn;
 	
-	ServicoController servicoController = new ServicoController(sc, conn);
-	
-	public ServicoView(Scanner sc, Connection conn) {
+	public ServicoView(Scanner sc) {
 		this.sc = sc;
-		this.conn = conn;
 	}
 	
-	public void menuServico() {
+	public void menuServico(ServicoController servicoController) {
 		int optMenuServico = -1;
     	while (optMenuServico != 0) {
     		System.out.println("\n--- GERENCIANDO SERVIÇOS ---");
@@ -45,7 +40,7 @@ public class ServicoView {
     	}
 	}
 	
-	public Servico coletaDadosServico() {
+	public Servico coletaDadosServico(ServicoController servicoController) {
 		
 		Servico servico = new Servico();
 		

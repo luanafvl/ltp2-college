@@ -1,8 +1,6 @@
 // Pacote onde a classe Cliente está localizada
 package model.entities;
 
-// Importa a interface Serializable para permitir que objetos dessa class
-
 // Classe Cliente representa um cliente no sistema e pode ser serializada
 public class Cliente {
 
@@ -11,7 +9,8 @@ public class Cliente {
 	private String nome;
 	private String telefone;
 	private String email;
-	private Integer tipo;           // Inteiro representando o tipo de cliente (ex: 1 = NACIONAL ou 2 = ESTRANGEIRO)
+	private Integer idTipo;         // Inteiro representando o tipo de cliente (chave estrangeira)
+	private String tipo;			// Tipo do cliente: nacional ou internacional
 	private String cpf;             // CPF para clientes nacionais
 	private String passaporte;      // Passaporte para clientes estrangeiros
 	
@@ -19,7 +18,17 @@ public class Cliente {
 	public Cliente() {}
 
 	// Construtor com parâmetros para criar um cliente completo, exceto o ID (auto-incrementado pelo banco)
-	public Cliente(String nome, String telefone, String email, Integer tipo, String cpf, String passaporte) {
+	public Cliente(String nome, String telefone, String email, Integer idTipo, String tipo, String cpf, String passaporte) {
+		this.nome = nome;
+		this.telefone = telefone;
+		this.email = email;
+		this.idTipo = idTipo;
+		this.tipo = tipo;
+		this.cpf = cpf;
+		this.passaporte = passaporte;
+	}
+	
+	public Cliente(String nome, String telefone, String email, String tipo, String cpf, String passaporte) {
 		this.nome = nome;
 		this.telefone = telefone;
 		this.email = email;
@@ -63,11 +72,19 @@ public class Cliente {
 		this.email = email;
 	}
 	
-	public Integer getTipo() {
+	public Integer getIdTipo() {
+		return idTipo;
+	}
+
+	public void setIdTipo(Integer idTipo) {
+		this.idTipo = idTipo;
+	}
+	
+	public String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(Integer tipo) {
+	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 	

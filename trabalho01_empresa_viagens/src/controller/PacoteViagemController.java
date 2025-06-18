@@ -9,30 +9,27 @@ import view.PacoteViagemView;
 
 public class PacoteViagemController {
 	
-	Scanner sc;
-	Connection conn;
+	PacoteViagemController pacoteViagemController;
+
+	private PacoteViagemView pacoteViagemView;
+	private PacoteViagemDaoJDBC pacoteViagemDao;
 	
-	PacoteViagemView pacoteViagemView = new PacoteViagemView(sc, conn);
-	PacoteViagemDaoJDBC pacoteViagemDao = new PacoteViagemDaoJDBC(conn);
-	PacoteViagem pacoteViagem = new PacoteViagem();
-	Integer id;
-	
-	public PacoteViagemController(Scanner sc, Connection conn) {
-		this.sc = sc;
-		this.conn = conn;
+	public PacoteViagemController(Scanner sc, Connection conn, PacoteViagemView pacoteViagemView) {
+		this.pacoteViagemView = pacoteViagemView;
+		this.pacoteViagemDao = new PacoteViagemDaoJDBC(conn);
 	}
 	
 	public void insertPacoteViagem() {
-		pacoteViagem = pacoteViagemView.coletaDadosPacoteViagem();
+		PacoteViagem pacoteViagem = pacoteViagemView.coletaDadosPacoteViagem(pacoteViagemController);
 		if (pacoteViagem != null) pacoteViagemDao.insert(pacoteViagem);
 	}
 	
 	public void updatePacoteViagem() {
 		pacoteViagemDao.findAll();
-		id = pacoteViagemView.coletaIdPacoteViagem();
+		Integer id = pacoteViagemView.coletaIdPacoteViagem();
 		if (id != 0) {
 		System.out.println("Entre com os novos dados do pacoteViagem: ");
-		pacoteViagem = pacoteViagemView.coletaDadosPacoteViagem();
+		PacoteViagem pacoteViagem = pacoteViagemView.coletaDadosPacoteViagem(pacoteViagemController);
 			if (pacoteViagem != null) {
 				pacoteViagemDao.update(pacoteViagem);
 				System.out.println("Operação concluída com sucesso");
@@ -42,7 +39,7 @@ public class PacoteViagemController {
 	
 	public void deletePacoteViagemById() {
 		pacoteViagemDao.findAll();
-		id = pacoteViagemView.coletaIdPacoteViagem();
+		Integer id = pacoteViagemView.coletaIdPacoteViagem();
 		if (id != 0) {
 			pacoteViagemDao.deleteById(id);
 			System.out.println("Operação concluída com sucesso.");
@@ -50,9 +47,9 @@ public class PacoteViagemController {
 	}
 	
 	public void findPacoteViagemById() {
-		id = pacoteViagemView.coletaIdPacoteViagem();
+		Integer id = pacoteViagemView.coletaIdPacoteViagem();
 		if (id != 0) {
-			pacoteViagem = pacoteViagemDao.findById(id);
+			PacoteViagem pacoteViagem = pacoteViagemDao.findById(id);
 			System.out.println(pacoteViagem);
 		}
 	}

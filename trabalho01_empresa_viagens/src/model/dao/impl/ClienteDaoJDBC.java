@@ -39,7 +39,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 				st.setString(3, cliente.getEmail());
 				st.setString(4, cliente.getCpf());
 				st.setString(5, cliente.getPassaporte());
-				st.setInt(6, cliente.getTipo()+1);
+				st.setInt(6, cliente.getIdTipo());
 				
 				st.executeUpdate();
 				
@@ -79,7 +79,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 				st.setString(3, cliente.getEmail());
 				st.setString(4, cliente.getCpf());
 				st.setString(5, cliente.getPassaporte());
-				st.setInt(6, cliente.getTipo()+1);
+				st.setInt(6, cliente.getIdTipo());
 
 				// Alterar para cliente.getId()
 				st.setInt(7, cliente.getId());
@@ -134,7 +134,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 	@Override
 	public Cliente findById(Integer id) {
 
-		Cliente cli = new Cliente();
+		Cliente cli = null;
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -160,19 +160,23 @@ public class ClienteDaoJDBC implements ClienteDao {
 				
 				rs = st.executeQuery();
 				
+				cli = new Cliente();
+				
 				if (rs.next()) {	
 					cli.setId(rs.getInt("id"));
 					cli.setNome(rs.getString("nome"));
 					cli.setTelefone(rs.getString("telefone"));
 					cli.setEmail(rs.getString("email"));
-					cli.setTipo(Integer.valueOf(rs.getString("tipo")));
+					cli.setTipo(rs.getString("tipo"));
 					cli.setCpf(rs.getString("cpf"));
 					cli.setPassaporte(rs.getString("passaporte"));
+				} else {
+					return null;
 				}
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao encontrar cliente: " + e.getMessage());
-				cli = null;
+				return null;
 			}
 			finally {	
 				try {
@@ -182,7 +186,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 				catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
-		    	}
+		    }
 		}
 		return cli;
 	}
@@ -221,6 +225,42 @@ public class ClienteDaoJDBC implements ClienteDao {
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao listar clientes: " + e.getMessage());
+			}
+		}
+	}
+	
+	@Override
+	public void findAllTiposCliente() {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		if(conn != null) {
+			
+			try {
+				
+				st = conn.prepareStatement(
+						"SELECT "
+						+ "id_tipo_cliente, "
+						+ "tipo_cliente "
+						+ "FROM tb_tipo_cliente"
+						);
+				
+				rs = st.executeQuery();
+				
+				StringBuilder tipoMsg = new StringBuilder("Tipos de clientes: ");
+				
+				while(rs.next()) {
+		            Integer idTipo = rs.getInt("id_tipo_pacote_viagem");
+		            String tipo = rs.getString("tipo_pacote_viagem");
+		            
+		            tipoMsg.append("\n").append(idTipo).append(" - ").append(tipo);
+				}
+				
+				System.out.println(tipoMsg);
+			}
+			catch (SQLException e) {
+				System.out.println("Erro ao listar tipos de pacote: " + e.getMessage());
 			}
 		}
 	}

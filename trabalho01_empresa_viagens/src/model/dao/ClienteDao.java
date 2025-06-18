@@ -36,4 +36,6 @@ public interface ClienteDao {
     * @return Lista de Cliente.
     */
 	void findAll();
+	
+	void findAllTiposCliente();
 }

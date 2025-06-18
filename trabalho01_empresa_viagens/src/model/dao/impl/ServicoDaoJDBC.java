@@ -129,7 +129,7 @@ public class ServicoDaoJDBC implements ServicoDao {
 	@Override
 	public Servico findById(Integer id) {
 		
-		Servico servico = new Servico();
+		Servico servico = null;
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -150,16 +150,20 @@ public class ServicoDaoJDBC implements ServicoDao {
 				
 				rs = st.executeQuery();
 				
+				servico = new Servico();
+				
 				if (rs.next()) {
 					servico.setId(rs.getInt("id_servico"));
 					servico.setNome(rs.getString("servico"));
 					servico.setPreco(rs.getDouble("preco"));
 					servico.setDescricao(rs.getString("descricao"));
+				} else {
+					return null;
 				}
 			}
 			catch (SQLException e) {
 				System.out.println("Erro ao listar serviço: " + e.getMessage());
-				servico = null;
+				return null;
 			}
 		}
 		return servico;
