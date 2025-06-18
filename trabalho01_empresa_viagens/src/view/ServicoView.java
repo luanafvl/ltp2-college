@@ -49,7 +49,6 @@ public class ServicoView {
 	        String nome = sc.nextLine();
 	        System.out.print("Preço: ");
 	        Double preco = Double.parseDouble(sc.nextLine());
-	        sc.nextLine();
 	        System.out.print("Descrição: ");
 	        String descricao = sc.nextLine();
 	        
@@ -73,6 +72,7 @@ public class ServicoView {
 			id = Integer.parseInt(sc.nextLine());
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
+			return 0;
 		}
 		return id;
 	}

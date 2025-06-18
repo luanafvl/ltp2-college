@@ -51,6 +51,7 @@ public class DB {
 		return props;
 	}
 
+	@SuppressWarnings("serial")
 	class DbException extends RuntimeException {
 		
 		public DbException(String msg) {

@@ -19,24 +19,11 @@ public class ClientePacoteServicoDaoJDBC {
         this.conn = conn;
     }
 
-    public void adicionarPacoteParaCliente() {
+    public void adicionarPacoteParaCliente(Integer idCliente, Integer idPacoteViagem) {
         PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
-        	
-        	ClienteDaoJDBC cDao = new ClienteDaoJDBC(conn);
-        	PacoteViagemDaoJDBC pvDao = new PacoteViagemDaoJDBC(conn);
-        	
-        	cDao.findAll();
-        	
-        	System.out.print("Informe o id do cliente: ");
-        	Integer idCliente = sc.nextInt();
-        	
-        	pvDao.findAll();
-        	
-        	System.out.print("Informe o id do pacote: ");
-        	Integer idPacote = sc.nextInt();
         	
             st = conn.prepareStatement(
             		"INSERT INTO rel_cliente_pacote "
@@ -45,7 +32,7 @@ public class ClientePacoteServicoDaoJDBC {
             		);
             
             st.setInt(1, idCliente);
-            st.setInt(2, idPacote);
+            st.setInt(2, idPacoteViagem);
 
             st.executeUpdate();
             System.out.println("Pacote associado ao cliente com sucesso!");
@@ -65,20 +52,12 @@ public class ClientePacoteServicoDaoJDBC {
     }
 
 
-    public Integer listarPacotesDoCliente() {
+    public void listarPacotesDoCliente(Integer idCliente) {
     	
         PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
-        	
-        	ClienteDaoJDBC cDao = new ClienteDaoJDBC(conn);
-        	cDao.findAll();
-        	
-        	System.out.print("Informe o id do cliente: ");
-        	Integer idCliente = sc.nextInt();
-        	
-        	System.out.println();
             
     		st = conn.prepareStatement(
 					"SELECT "
@@ -104,10 +83,6 @@ public class ClientePacoteServicoDaoJDBC {
             }
             
             System.out.println(pacoteClienteMsg);
-            
-            System.out.println();
-            
-            return idCliente;
 
         } catch (SQLException e) {
             System.out.println("Erro ao listar pacotes do cliente: " + e.getMessage());
@@ -119,28 +94,15 @@ public class ClientePacoteServicoDaoJDBC {
                 System.out.println("Erro finalizar: " + e.getMessage());
             }
         }
-        
-        return 0;
     }
     
-    public void adicionarServicoAoPacoteCliente(Integer idCliente) {
+    public void adicionarServicoAoPacoteCliente(Integer idCliente, Integer idPacote, Integer idServico) {
         
     	PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
-            
-        	System.out.print("Informe o id do pacote: ");
-        	Integer idPacote = sc.nextInt();
-        	
-            ServicoDaoJDBC sDao = new ServicoDaoJDBC(conn);
-            sDao.findAll();
-            
-            System.out.print("Informe o id do serviço para acrescentar ao pacote: ");
-            Integer idServico = sc.nextInt();
-            
-            
-            st = conn.prepareStatement(
+        	st = conn.prepareStatement(
                 "INSERT INTO rel_cliente_pacote_servico "
                 + "(id_cliente, id_pacote_viagem, id_servico) "
                 + "VALUES (?, ?, ?)"
@@ -166,17 +128,12 @@ public class ClientePacoteServicoDaoJDBC {
     }
     
     
-    public void listarServicosDoClienteNoPacote() {
+    public void listarServicosDoClienteNoPacote(Integer idCliente, Integer idPacoteViagem) {
 
         PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
-        	
-            Integer idCliente = listarPacotesDoCliente();
-            
-            System.out.print("Informe o id do pacote: ");
-        	Integer idPacote = sc.nextInt();
         	
     	    st = conn.prepareStatement(
     	    		"SELECT "
@@ -189,11 +146,11 @@ public class ClientePacoteServicoDaoJDBC {
     	    		);
     	    
     	    st.setInt(1, idCliente);
-    	    st.setInt(2, idPacote);
+    	    st.setInt(2, idPacoteViagem);
 
     	    rs = st.executeQuery();
 
-    	    StringBuilder servicosPacoteClienteMsg = new StringBuilder("Serviços do cliente " + idCliente + " no pacote " + idPacote + ":");
+    	    StringBuilder servicosPacoteClienteMsg = new StringBuilder("Serviços do cliente " + idCliente + " no pacote " + idPacoteViagem + ":");
     	    while (rs.next()) {
     	        Integer idServico = rs.getInt("id_servico");
     	        String nome = rs.getString("servico");

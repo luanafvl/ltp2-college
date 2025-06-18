@@ -87,6 +87,7 @@ public class ClienteView {
 			id = Integer.parseInt(sc.nextLine());
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
+			return 0;
 		}
 		
 		return id;

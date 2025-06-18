@@ -5,10 +5,10 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 import controller.ClienteController;
+import controller.ClientePacoteServicoController;
 import controller.PacoteViagemController;
 import controller.ServicoController;
 import db.DB; // Classe responsável por fornecer a conexão com o banco
-import model.dao.impl.ClientePacoteServicoDaoJDBC;
 
 /*
  * Classe principal do menu de interações com o usuário
@@ -29,11 +29,8 @@ public class Menu {
 	    ClienteController clienteController = new ClienteController(sc, conn, clienteView);
 	    PacoteViagemController pacoteViagemController = new PacoteViagemController(sc, conn, pacoteViagemView);
 	    ServicoController servicoController = new ServicoController(sc, conn, servicoView);
-	    
-	    
-	    // Cria instância do DAO que lida com relacionamento cliente-pacote-serviço
-	    ClientePacoteServicoDaoJDBC clientePacoteServicoDAO = new ClientePacoteServicoDaoJDBC(conn);
-
+	    ClientePacoteServicoController cliPacSerController = new ClientePacoteServicoController(sc, conn, clienteController, clienteView, pacoteViagemController, pacoteViagemView, servicoController, servicoView);
+	 
 	    int optMenuPrincipal = -1; // Controle do menu
 	    while (optMenuPrincipal != 0) {
 	        // Exibição do menu principal
@@ -57,10 +54,10 @@ public class Menu {
 	            case 1 -> clienteView.menuCliente(clienteController);
 	            case 2 -> pacoteViagemView.menuPacoteViagem(pacoteViagemController); 
 	            case 3 -> servicoView.menuServico(servicoController);
-	            case 4 -> clientePacoteServicoDAO.adicionarPacoteParaCliente();
-	            case 5 -> clientePacoteServicoDAO.listarPacotesDoCliente();
-	            case 6 -> clientePacoteServicoDAO.adicionarServicoAoPacoteCliente(clientePacoteServicoDAO.listarPacotesDoCliente());
-	            case 7 -> clientePacoteServicoDAO.listarServicosDoClienteNoPacote();
+	            case 4 -> cliPacSerController.addPacoteParaCliente();
+	            case 5 -> cliPacSerController.listarPacotesDoCliente();
+	            case 6 -> cliPacSerController.addServicoAoPacoteDoCliente();
+	            case 7 -> cliPacSerController.listarServicosDoClienteNoPacote();
 	            default -> System.out.println("Opção inválida.");
 	        }
 	    }

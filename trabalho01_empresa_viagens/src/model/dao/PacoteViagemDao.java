@@ -46,5 +46,4 @@ public interface PacoteViagemDao {
  	* @return Lista de Tipo.
  	*/
 	void findAllTipos();
-	
 }
