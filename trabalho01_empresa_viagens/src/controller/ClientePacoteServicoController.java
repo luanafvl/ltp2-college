@@ -44,6 +44,7 @@ public class ClientePacoteServicoController {
 	}
 	
 	public Integer listarPacotesDoCliente() {
+		clienteController.findAllClientes();
 		Integer idCliente = clienteView.coletaIdCliente();
 		cliPacSerDao.listarPacotesDoCliente(idCliente);
 		return idCliente;
